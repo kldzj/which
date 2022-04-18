@@ -10,10 +10,12 @@ export type WhichOptions = Partial<{
 export const isWindows =
   process.platform === 'win32' || process.env.OSTYPE === 'cygwin' || process.env.OSTYPE === 'msys';
 
+export const colon = isWindows ? ';' : ':';
+
 const debug = getDebugger('which');
 
 function splitPath(path: string): string[] {
-  return path.split(isWindows ? /[:;]/ : /:/);
+  return path.split(colon);
 }
 
 function getPaths(opts?: WhichOptions): string[] {
