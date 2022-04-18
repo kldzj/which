@@ -10,8 +10,8 @@ import { which } from '@kldzj/which';
 
 const ffmpegPath = await which('ffmpeg');
 
-// sync
-import { whichSync } from '@kldzj/which';
+// sync (import as you prefer)
+import { which, whichSync } from '@kldzj/which';
 
 const nodePath = which.sync('node');
 const samePath = whichSync('node');
@@ -24,9 +24,9 @@ import { join } from 'path';
 import { which } from '@kldzj/which';
 
 const path = await which('executable', {
-  // pass additional paths to search
+  // pass additional paths to search in
   paths: [join(__dirname, 'bin')],
-  // pass additional extensions to search
+  // pass additional extensions to search for
   exeExt: ['.xyz'],
 });
 ```

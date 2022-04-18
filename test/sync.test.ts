@@ -1,7 +1,7 @@
 import { basename, dirname } from 'path';
 import { writeFileSync, unlinkSync } from 'fs';
 import { script, getScriptPath, makeExecutable } from '.';
-import { whichSync } from '../src';
+import { which, whichSync } from '../src';
 
 const scriptPath = getScriptPath('sync');
 
@@ -34,5 +34,9 @@ describe('sync', () => {
   it('should not find when non-executable', () => {
     const foobar = whichSync(basename(scriptPath), { paths: [dirname(scriptPath)] });
     expect(foobar).toBeNull();
+  });
+
+  it('should export sync property on the which function object', () => {
+    expect(typeof which.sync).toBe('function');
   });
 });
