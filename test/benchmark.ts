@@ -1,6 +1,6 @@
 import isExe from 'isexe';
 import { Suite } from 'benchmark';
-import which, { whichAsync } from '../src';
+import which from '../src';
 
 new Suite('which')
   .add('sync', {
@@ -13,18 +13,6 @@ new Suite('which')
     fn: async (deferred: any) => {
       await which('node');
       deferred.resolve();
-    },
-  })
-  .add('callback', {
-    defer: true,
-    fn: (deferred: any) => {
-      whichAsync('node', {}, (err) => {
-        if (err) {
-          deferred.reject(err);
-        } else {
-          deferred.resolve();
-        }
-      });
     },
   })
   .add('isExe#sync', {
