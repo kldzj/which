@@ -1,6 +1,8 @@
 ## which
 
-A `which`-like utility.
+A [`which (1)`](https://linux.die.net/man/1/which)-like utility.
+
+Returns the single first instance of the command executable that can be found, and null otherwise.
 
 ### Usage
 
