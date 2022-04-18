@@ -21,18 +21,18 @@ describe('sync', () => {
 
   it('should find when executable', () => {
     makeExecutable(scriptPath);
-    const foobar = whichSync(basename(scriptPath), { paths: [dirname(scriptPath)] });
+    const foobar = whichSync(basename(scriptPath), { paths: [dirname(scriptPath)], exeExt: ['.SH'] });
     expect(typeof foobar).toBe('string');
   });
 
   it('should find when executable with absolute path', async () => {
     makeExecutable(scriptPath);
-    const foobar = whichSync(scriptPath);
+    const foobar = whichSync(scriptPath, { exeExt: ['.SH'] });
     expect(typeof foobar).toBe('string');
   });
 
   it('should not find when non-executable', () => {
-    const foobar = whichSync(basename(scriptPath), { paths: [dirname(scriptPath)] });
+    const foobar = whichSync(basename(scriptPath), { paths: [dirname(scriptPath)], exeExt: ['.SH'] });
     expect(foobar).toBeNull();
   });
 });

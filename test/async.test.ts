@@ -21,18 +21,18 @@ describe('async', () => {
 
   it('should find when executable', async () => {
     makeExecutable(scriptPath);
-    const foobar = await which(basename(scriptPath), { paths: [dirname(scriptPath)] });
+    const foobar = await which(basename(scriptPath), { paths: [dirname(scriptPath)], exeExt: ['.SH'] });
     expect(typeof foobar).toBe('string');
   });
 
   it('should find when executable with absolute path', async () => {
     makeExecutable(scriptPath);
-    const foobar = await which(scriptPath);
+    const foobar = await which(scriptPath, { exeExt: ['.SH'] });
     expect(typeof foobar).toBe('string');
   });
 
   it('should not find when non-executable', async () => {
-    const foobar = await which(basename(scriptPath), { paths: [dirname(scriptPath)] });
+    const foobar = await which(basename(scriptPath), { paths: [dirname(scriptPath)], exeExt: ['.SH'] });
     expect(foobar).toBeNull();
   });
 });
