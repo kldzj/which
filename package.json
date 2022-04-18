@@ -26,9 +26,11 @@
     "prepublishOnly": "yarn build && yarn test"
   },
   "dependencies": {
+    "debug": "^4.3.4",
     "isexe": "^2.0.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
     "@types/isexe": "^2.0.1",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.24",

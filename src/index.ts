@@ -1,4 +1,5 @@
 import { resolve, sep } from 'path';
+import getDebugger from 'debug';
 import isExe from 'isexe';
 
 export type WhichOptions = Partial<{
@@ -8,6 +9,8 @@ export type WhichOptions = Partial<{
 
 export const isWindows =
   process.platform === 'win32' || process.env.OSTYPE === 'cygwin' || process.env.OSTYPE === 'msys';
+
+const debug = getDebugger('which');
 
 function splitPath(path: string): string[] {
   return path.split(isWindows ? /[:;]/ : /:/);
@@ -36,20 +39,24 @@ export async function which(cmd: string, opts: WhichOptions = {}): Promise<strin
   const paths = getPaths(opts);
   const exeExts = getExeExts(opts);
   const exeOpts = getIsExeOptions(exeExts);
+  debug(`cmd=${cmd}, paths=${paths}, exeExts=${exeExts}`);
 
   if (cmd.includes(sep)) {
+    debug('got relative/absolute path');
     const path = resolve(cmd);
     return (await isExe(path, exeOpts)) ? path : null;
   }
 
   for (const path of paths) {
     const file = resolve(path, cmd);
+    debug(`checking ${file}`);
     if (await isExe(file, exeOpts)) {
       return file;
     }
 
     if (isWindows || opts?.exeExt?.length) {
       for (const cmdWithExt of getCmdWithExts(file, exeExts)) {
+        debug(`- checking ${cmdWithExt}`);
         if (await isExe(cmdWithExt, exeOpts)) {
           return cmdWithExt;
         }
@@ -57,6 +64,7 @@ export async function which(cmd: string, opts: WhichOptions = {}): Promise<strin
     }
   }
 
+  debug(`${cmd} not found`);
   return null;
 }
 
@@ -64,20 +72,24 @@ export function whichSync(cmd: string, opts: WhichOptions = {}): string | null {
   const paths = getPaths(opts);
   const exeExts = getExeExts(opts);
   const exeOpts = getIsExeOptions(exeExts);
+  debug(`cmd=${cmd}, paths=${paths}, exeExts=${exeExts}`);
 
   if (cmd.includes(sep)) {
+    debug('got relative/absolute path');
     const path = resolve(cmd);
     return isExe.sync(path, exeOpts) ? path : null;
   }
 
   for (const path of paths) {
     const file = resolve(path, cmd);
+    debug(`checking ${file}`);
     if (isExe.sync(file, exeOpts)) {
       return file;
     }
 
     if (isWindows || opts?.exeExt?.length) {
       for (const cmdWithExt of getCmdWithExts(file, exeExts)) {
+        debug(`- checking ${cmdWithExt}`);
         if (isExe.sync(cmdWithExt, exeOpts)) {
           return cmdWithExt;
         }
@@ -85,6 +97,7 @@ export function whichSync(cmd: string, opts: WhichOptions = {}): string | null {
     }
   }
 
+  debug(`${cmd} not found`);
   return null;
 }
 
