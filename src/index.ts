@@ -49,25 +49,37 @@ export async function which(cmd: string, opts: WhichOptions = {}): Promise<strin
     return (await isExe(path, exeOpts)) ? path : null;
   }
 
-  for (const path of paths) {
+  async function step(path?: string): Promise<string | null> {
+    if (!path) return null;
     const file = resolve(path, cmd);
     debug(`checking ${file}`);
     if (await isExe(file, exeOpts)) {
       return file;
     }
 
+    const cmdWithExts = getCmdWithExts(cmd, exeExts);
     if (isWindows || opts?.exeExt?.length) {
-      for (const cmdWithExt of getCmdWithExts(file, exeExts)) {
-        debug(`- checking ${cmdWithExt}`);
-        if (await isExe(cmdWithExt, exeOpts)) {
-          return cmdWithExt;
-        }
+      const match = await subStep(cmdWithExts.shift());
+      if (match) {
+        return match;
       }
     }
+
+    async function subStep(pathWithExt?: string): Promise<string | null> {
+      if (!pathWithExt) return null;
+      debug(`- checking ${pathWithExt}`);
+      if (await isExe(pathWithExt, exeOpts)) {
+        return pathWithExt;
+      }
+
+      return subStep(cmdWithExts.shift());
+    }
+
+    return step(paths.shift());
   }
 
   debug(`${cmd} not found`);
-  return null;
+  return step(paths.shift());
 }
 
 export function whichSync(cmd: string, opts: WhichOptions = {}): string | null {
