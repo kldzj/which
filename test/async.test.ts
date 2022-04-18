@@ -32,7 +32,7 @@ describe('async', () => {
   });
 
   it('should not find when non-executable', async () => {
-    const foobar = await which(basename(scriptPath), { paths: [dirname(scriptPath)], exeExt: ['.SH'] });
+    const foobar = await which(basename(scriptPath), { paths: [dirname(scriptPath)] });
     expect(foobar).toBeNull();
   });
 });

@@ -32,7 +32,7 @@ describe('sync', () => {
   });
 
   it('should not find when non-executable', () => {
-    const foobar = whichSync(basename(scriptPath), { paths: [dirname(scriptPath)], exeExt: ['.SH'] });
+    const foobar = whichSync(basename(scriptPath), { paths: [dirname(scriptPath)] });
     expect(foobar).toBeNull();
   });
 });
